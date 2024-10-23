@@ -23,7 +23,7 @@ import {Utils} from "lib/foundry-era-contracts/src/system-contracts/contracts/li
 // Open-Zeppelin
 import {ECDSA} from "lib/foundry-era-contracts/lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol";
 import {Ownable} from "lib/foundry-era-contracts/lib/openzeppelin-contracts/contracts/access/Ownable.sol";
-// import {console} from "forge-std/console.sol";
+import {console} from "forge-std/console.sol";
 // import {MessageHashUtils} from "lib/foundry-era-contracts/lib/openzeppelin-contracts/contracts/utils/cryptography/MessageHashUtils.sol";
 
 /**
@@ -99,11 +99,9 @@ contract ZkMinimalAccount is IAccount, Ownable {
         _executeTransaction(_transaction);
     }
 
-    // There is no point in providing possible signed hash in the `executeTransactionFromOutside` method,
-    // since it typically should not be trusted.
     function executeTransactionFromOutside(Transaction calldata _transaction) external payable {
-        // bytes4 magic = _validateTransaction(_transaction);
-        // if (magic != ACCOUNT_VALIDATION_SUCCESS_MAGIC) revert ZkMinimalAccount__ValidationFailed();
+        bytes4 magic = _validateTransaction(_transaction);
+        if (magic != ACCOUNT_VALIDATION_SUCCESS_MAGIC) revert ZkMinimalAccount__ValidationFailed();
         _executeTransaction(_transaction);
     }
 
@@ -147,6 +145,7 @@ contract ZkMinimalAccount is IAccount, Ownable {
         // check for signature
         bytes32 transactionHash = _transaction.encodeHash();
         address signer = ECDSA.recover(transactionHash, _transaction.signature);
+        console.log(signer);
         // if(verifier == )
         bool isValid = signer == owner();
 
@@ -186,5 +185,3 @@ contract ZkMinimalAccount is IAccount, Ownable {
         return owner();
     }
 }
-
-// --system-mode=true
