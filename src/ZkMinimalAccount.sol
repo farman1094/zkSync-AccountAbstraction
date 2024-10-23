@@ -23,7 +23,7 @@ import {Utils} from "lib/foundry-era-contracts/src/system-contracts/contracts/li
 // Open-Zeppelin
 import {ECDSA} from "lib/foundry-era-contracts/lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol";
 import {Ownable} from "lib/foundry-era-contracts/lib/openzeppelin-contracts/contracts/access/Ownable.sol";
-import {console} from "forge-std/console.sol";
+// import {console} from "forge-std/console.sol";
 // import {MessageHashUtils} from "lib/foundry-era-contracts/lib/openzeppelin-contracts/contracts/utils/cryptography/MessageHashUtils.sol";
 
 /**
@@ -104,9 +104,7 @@ contract ZkMinimalAccount is IAccount, Ownable {
     function executeTransactionFromOutside(Transaction calldata _transaction) external payable {
         // bytes4 magic = _validateTransaction(_transaction);
         // if (magic != ACCOUNT_VALIDATION_SUCCESS_MAGIC) revert ZkMinimalAccount__ValidationFailed();
-        console.log("IN: 1");
         _executeTransaction(_transaction);
-        console.log("out: 1");
     }
 
     function payForTransaction(
@@ -175,7 +173,6 @@ contract ZkMinimalAccount is IAccount, Ownable {
             assembly {
                 success := call(gas(), to, value, add(data, 0x20), mload(data), 0, 0)
             }
-        console.log("IN: 2");
             if (!success) {
                 revert ZkMinimalAccount__ExecutionFailed();
             }
